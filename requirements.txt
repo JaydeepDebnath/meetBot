@@ -1,0 +1,11 @@
+Flask 
+SQLAlchemy
+requests
+sounddevice
+soundfile
+selenium
+pygame
+secrets
+flask_login
+bcrypt
+re
