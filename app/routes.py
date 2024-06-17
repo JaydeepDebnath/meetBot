@@ -1,6 +1,6 @@
 from flask import jsonify, request, render_template,session, redirect, url_for
 from flask_login import LoginManager, login_required, current_user
-from app import app
+from app import app,db
 from app.models import User,Bot
 import secrets
 import datetime 
@@ -31,9 +31,11 @@ def  validate_session_token(session_token):
         return False
 
 
-@app.route('/',methods=['GET'])
+@app.route('/')
 def index():
-    return render_template('index.html')
+    user = User.query.first()
+
+    return render_template('index.html',user = user)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -46,10 +48,10 @@ def user_register():
     password = request.form.get('password')
     contactNumber = request.form.get('contactNumber')
 
-    existedUser = User.objects('username')
-    existedEmail = User.objects('email')
-    if existedUser or existedEmail:
-        return jsonify({'error': 'Username or email already exists'}), 404
+    # existedUser = User.objects('username')
+    # existedEmail = User.objects('email')
+    # if existedUser or existedEmail:
+    #     return jsonify({'error': 'Username or email already exists'}), 404
     
     # Bcrypt password
 
@@ -57,7 +59,8 @@ def user_register():
     
 
     newUser = User(username=username, email=email,password=hashed_password, contactNumber=contactNumber)
-    newUser.save()
+    db.session.add(newUser)
+    db.session.commit()
 
     return jsonify({'message': 'User registered successfully'}), 201
 
@@ -80,7 +83,7 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-@app.route('/join_meeting',methods=['POST'])
+@app.route('/join',methods=['POST'])
 @login_required
 def join_meeting():
     bot_id = Bot.form.get('bot_id')

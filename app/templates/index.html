@@ -2,14 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Meeting bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Google Meet</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+</head>
 </head>
 <body>
-    <h1>List of Bots</h1>
-    <ul>
-    {% for bot in bots %}
-        <li>{{ bot.name }} - {{ bot.email }}</li>
-    {% endfor %}
-    </ul>
+    <div class="user-details">
+        <h2>User Details</h2>
+        {% if user %}
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Contact Number:</strong> {{ user.contactNumber }}</p>
+        {% else %}
+        <p>No user found</p>
+        {% endif %}
+
+    </div>
+
+    <div class="meet-link">
+        <h2>Join Google Meet</h2>
+        <form action="/join" method="post">
+            <label for="meet-link">Enter Google Meet Link:</label><br>
+            <input type="text" id="meet-link" name="meet-link"><br><br>
+            <button type="submit">Join Meeting</button>
+        </form>
+    </div>
+
 </body>
 </html>
